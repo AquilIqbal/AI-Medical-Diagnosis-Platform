@@ -154,10 +154,3 @@ The trained Random Forest model is not included in this repository because of it
 
 The notebook trains a Random Forest with 200 estimators using the included clinical dataset. Training time and prediction performance depend on your system and the dataset. The dataset is approximately 89 MB; review its license and redistribution terms before publishing or sharing it.
 
-## Before publishing to GitHub
-
-- Keep `.env`, passwords, secret keys, and other credentials out of commits.
-- Do not publish local patient information, uploaded images, generated Grad-CAM files, or other private data in `uploads/`, `instance/`, or `logs/`.
-- Do not upload the local Python environment (`.venv/` or `aipp/`); recreate it from `requirements.txt`.
-- The generated clinical Random Forest model is excluded from Git; recreate it by following [Generating the Clinical ML Model](#generating-the-clinical-ml-model).
-- Review the dataset and model licenses and attribution requirements before redistributing them.
