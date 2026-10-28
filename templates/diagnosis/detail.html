@@ -1,0 +1,137 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Diagnosis Detail | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Clinical assessments</p>
+        <h1 class="dashboard-welcome__title">Diagnosis Detail</h1>
+        <p class="dashboard-welcome__description">Review the selected diagnosis and its clinical context.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.list_diagnoses') }}"><i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Back</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.clinical_assessment', diagnosis_id=diagnosis.id) }}"><i class="bi bi-clipboard2-pulse me-2" aria-hidden="true"></i>{{ 'Review / Update Assessment' if diagnosis.clinical_assessment else 'Advanced Clinical Assessment' }}</a>
+        <a class="btn btn-primary" href="{{ url_for('diagnosis.edit_diagnosis', diagnosis_id=diagnosis.id) }}"><i class="bi bi-pencil-square me-2" aria-hidden="true"></i>Edit</a>
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="ui-card">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Clinical record</p>
+                    <h2 class="dashboard-section-title">Diagnosis Information</h2>
+                </div>
+                <span class="badge badge-soft-primary">{{ diagnosis.diagnosis_code }}</span>
+            </div>
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-secondary">Patient</dt>
+                <dd class="col-sm-8">{{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}</dd>
+                <dt class="col-sm-4 text-secondary">Diagnosis Date</dt>
+                <dd class="col-sm-8">{{ diagnosis.diagnosis_date if diagnosis.diagnosis_date else 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Status</dt>
+                <dd class="col-sm-8"><span class="badge badge-soft-primary">{{ diagnosis.status or 'Pending' }}</span></dd>
+                <dt class="col-sm-4 text-secondary">Chief Complaint</dt>
+                <dd class="col-sm-8">{{ diagnosis.chief_complaint or 'Not available' }}</dd>
+                <dt class="col-sm-4 text-secondary">Symptoms</dt>
+                <dd class="col-sm-8">{{ diagnosis.symptoms or 'Not available' }}</dd>
+                <dt class="col-sm-4 text-secondary">Medical History</dt>
+                <dd class="col-sm-8">{{ diagnosis.medical_history or 'Not available' }}</dd>
+                <dt class="col-sm-4 text-secondary">Doctor Notes</dt>
+                <dd class="col-sm-8 mb-0">{{ diagnosis.doctor_notes or 'Not available' }}</dd>
+            </dl>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="ui-card mb-4">
+            <p class="dashboard-eyebrow">AI assistance</p>
+            <h2 class="dashboard-section-title mb-4">NLP Prediction</h2>
+            {% if diagnosis.predicted_disease %}
+                <dl class="mb-0">
+                    <dt class="text-secondary">Prediction</dt>
+                    <dd>{{ diagnosis.predicted_disease }}</dd>
+                    <dt class="text-secondary">Confidence</dt>
+                    <dd>{{ '%.1f%%'|format(diagnosis.confidence_score * 100) if diagnosis.confidence_score is not none else 'Not available' }}</dd>
+                    <dt class="text-secondary">Model Name</dt>
+                    <dd class="mb-0">{{ diagnosis.model_name or 'Not available' }}</dd>
+                </dl>
+            {% else %}
+                <p class="text-secondary mb-0">Not performed.</p>
+            {% endif %}
+        </section>
+        <section class="ui-card mb-4">
+            <p class="dashboard-eyebrow">Optional detailed assessment</p>
+            <h2 class="dashboard-section-title mb-3">Clinical ML Prediction</h2>
+            {% set clinical_predictions = diagnosis.ai_predictions | selectattr('prediction_type', 'equalto', 'clinical_ml') | list %}
+            {% if clinical_predictions %}
+                {% set clinical_prediction = clinical_predictions[0] %}
+                <dl class="mb-3">
+                    <dt class="text-secondary">Clinical Status</dt>
+                    <dd>{{ clinical_prediction.predicted_label }}</dd>
+                    <dt class="text-secondary">Prediction</dt>
+                    <dd>Normal / Abnormal classification</dd>
+                    <dt class="text-secondary">Confidence</dt>
+                    <dd>{{ '%.1f%%'|format(clinical_prediction.confidence_score * 100) if clinical_prediction.confidence_score is not none else 'Not available' }}</dd>
+                    <dt class="text-secondary">Model Name</dt>
+                    <dd class="mb-0">{{ clinical_prediction.model_name }}</dd>
+                </dl>
+            {% else %}
+                <p class="text-secondary">Not performed.</p>
+            {% endif %}
+            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('diagnosis.clinical_assessment', diagnosis_id=diagnosis.id) }}">{{ 'Review / Update Assessment' if diagnosis.clinical_assessment else 'Add Assessment' }}</a>
+        </section>
+        {% set cnn_predictions = diagnosis.ai_predictions | selectattr('prediction_type', 'equalto', 'cnn') | list %}
+        <section class="ui-card">
+            <p class="dashboard-eyebrow">Image analysis</p>
+            <h2 class="dashboard-section-title mb-4">CNN Image Prediction</h2>
+            {% if cnn_predictions %}
+                {% set cnn_prediction = cnn_predictions[0] %}
+                <dl class="mb-3">
+                    <dt class="text-secondary">Prediction</dt>
+                    <dd>{{ cnn_prediction.predicted_label }}</dd>
+                    <dt class="text-secondary">Confidence</dt>
+                    <dd>{{ '%.1f%%'|format(cnn_prediction.confidence_score * 100) if cnn_prediction.confidence_score is not none else 'Not available' }}</dd>
+                    <dt class="text-secondary">Model Name</dt>
+                    <dd class="mb-0">{{ cnn_prediction.model_name }}</dd>
+                </dl>
+            {% else %}
+                <p class="text-secondary">Not performed.</p>
+            {% endif %}
+            {% if diagnosis.uploaded_image %}
+                <h3 class="h6 mt-4">Uploaded Medical Image</h3>
+                <img class="img-fluid rounded mt-2" src="{{ url_for('diagnosis.uploaded_file', filename=diagnosis.uploaded_image) }}" alt="Uploaded medical image for diagnosis {{ diagnosis.diagnosis_code }}" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+                <p class="text-secondary mt-2 mb-0" hidden>The uploaded medical image is unavailable.</p>
+            {% else %}
+                <p class="text-secondary mb-0">No medical image has been uploaded.</p>
+            {% endif %}
+            {% if cnn_predictions and cnn_prediction.visualization_path %}
+                <h3 class="h6 mt-4">Grad-CAM Visualization</h3>
+                <img class="img-fluid rounded mt-2" src="{{ url_for('diagnosis.uploaded_file', filename=cnn_prediction.visualization_path) }}" alt="Grad-CAM visualization for {{ cnn_prediction.predicted_label }}" onerror="this.hidden=true; this.nextElementSibling.hidden=false;">
+                <p class="text-secondary mt-2 mb-0" hidden>The Grad-CAM visualization is unavailable.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+<section class="ui-card mt-4">
+    <div class="dashboard-section-header">
+        <div>
+            <p class="dashboard-eyebrow">Patient context</p>
+            <h2 class="dashboard-section-title">Related Patient Information</h2>
+        </div>
+    </div>
+    <dl class="row mb-0">
+        <dt class="col-sm-4 text-secondary">Patient Name</dt>
+        <dd class="col-sm-8">{{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}</dd>
+        <dt class="col-sm-4 text-secondary">Patient Phone</dt>
+        <dd class="col-sm-8">{{ diagnosis.patient.phone or 'Not specified' }}</dd>
+        <dt class="col-sm-4 text-secondary">Patient Email</dt>
+        <dd class="col-sm-8">{{ diagnosis.patient.email or 'Not specified' }}</dd>
+        <dt class="col-sm-4 text-secondary">Created At</dt>
+        <dd class="col-sm-8">{{ diagnosis.created_at.strftime('%d %b %Y, %I:%M %p UTC') if diagnosis.created_at and diagnosis.created_at is not string else diagnosis.created_at or 'Not specified' }}</dd>
+        <dt class="col-sm-4 text-secondary">Updated At</dt>
+        <dd class="col-sm-8 mb-0">{{ diagnosis.updated_at.strftime('%d %b %Y, %I:%M %p UTC') if diagnosis.updated_at and diagnosis.updated_at is not string else diagnosis.updated_at or 'Not specified' }}</dd>
+    </dl>
+</section>
+{% endblock %}

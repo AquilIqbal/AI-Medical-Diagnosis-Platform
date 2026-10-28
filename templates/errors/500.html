@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Server Error | AI Medical Diagnosis Platform{% endblock %}
+{% block content %}
+<section class="error-page text-center py-5"><div class="container py-5">
+    <p class="hero-eyebrow">Error 500</p><h1 class="display-5 fw-bold">Something went wrong</h1>
+    <p class="text-secondary">Please try again later.</p>
+    <a class="btn btn-primary mt-3" href="{{ url_for('main.home') }}">Return home</a>
+</div></section>
+{% endblock %}

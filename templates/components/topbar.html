@@ -1,0 +1,25 @@
+﻿<header class="dashboard-topbar">
+    <button class="btn dashboard-menu-button d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboard-sidebar" aria-controls="dashboard-sidebar" aria-label="Open dashboard navigation">
+        <i class="bi bi-list" aria-hidden="true"></i>
+    </button>
+    <div class="dashboard-topbar__spacer"></div>
+    <div class="dashboard-topbar__actions">
+        <div class="dropdown">
+            <button class="btn dashboard-theme-toggle" type="button" id="theme-menu-button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Change color theme">
+                <i class="bi bi-circle-half" data-theme-icon aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end dashboard-theme-menu" aria-labelledby="theme-menu-button">
+                <li><button class="dropdown-item" type="button" data-theme-option="light"><i class="bi bi-sun" aria-hidden="true"></i> Light <i class="bi bi-check2 d-none" data-theme-check="light" aria-hidden="true"></i></button></li>
+                <li><button class="dropdown-item" type="button" data-theme-option="dark"><i class="bi bi-moon-stars" aria-hidden="true"></i> Dark <i class="bi bi-check2 d-none" data-theme-check="dark" aria-hidden="true"></i></button></li>
+                <li><button class="dropdown-item" type="button" data-theme-option="system"><i class="bi bi-pc-display" aria-hidden="true"></i> System <i class="bi bi-check2 d-none" data-theme-check="system" aria-hidden="true"></i></button></li>
+            </ul>
+        </div>
+        <div class="dashboard-user" aria-label="Current signed-in user">
+            <span class="dashboard-user__avatar" aria-hidden="true">{{ session["username"][0] | upper }}</span>
+            <div>
+                <span class="dashboard-user__name">{{ session["username"] }}</span>
+                <span class="dashboard-user__role">{{ session["role"] | title }}</span>
+            </div>
+        </div>
+    </div>
+</header>

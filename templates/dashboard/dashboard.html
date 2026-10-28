@@ -1,0 +1,90 @@
+﻿{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Dashboard | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Clinical workspace</p>
+        <h1 class="dashboard-welcome__title"><span data-dashboard-greeting>Good day</span>, {{ session["username"] }} <span aria-hidden="true">👋</span></h1>
+        <p class="dashboard-welcome__description">You are signed in as {{ session["role"] | title }}.</p>
+    </div>
+    <span class="badge badge-soft-primary"><i class="bi bi-shield-check me-1" aria-hidden="true"></i> Secure workspace</span>
+</section>
+
+<section aria-labelledby="statistics-heading">
+    <h2 class="visually-hidden" id="statistics-heading">Platform statistics</h2>
+    <div class="row g-4">
+        {% for title, value, caption, icon, tone in [
+            ('Patients', statistics.patient_count, 'Stored patient records', 'bi-people', 'primary'),
+            ('Diagnoses', statistics.diagnosis_count, 'Recorded clinical assessments', 'bi-clipboard2-pulse', 'accent'),
+            ('AI Predictions', statistics.ai_prediction_count, 'Stored model results', 'bi-cpu', 'secondary'),
+            ('Reports', statistics.report_count, 'Available diagnosis reports', 'bi-file-earmark-bar-graph', 'primary')
+        ] %}
+        <div class="col-sm-6 col-xl-3">
+            <article class="ui-card dashboard-stat-card">
+                <span class="dashboard-stat-card__icon dashboard-stat-card__icon--{{ tone }}"><i class="bi {{ icon }}" aria-hidden="true"></i></span>
+                <span class="dashboard-stat-card__label">{{ title }}</span>
+                <strong class="dashboard-stat-card__value">{{ value }}</strong>
+                <span class="dashboard-stat-card__caption">{{ caption }}</span>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<div class="row g-4 dashboard-lower-section">
+    <div class="col-lg-7">
+        <section class="ui-card dashboard-activity" aria-labelledby="activity-heading">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Overview</p>
+                    <h2 class="dashboard-section-title" id="activity-heading">Recent Activity</h2>
+                </div>
+                <span class="badge badge-soft-primary">Latest diagnoses</span>
+            </div>
+            <div class="dashboard-empty-state">
+                <span class="dashboard-empty-state__icon"><i class="bi bi-clock-history" aria-hidden="true"></i></span>
+                {% for activity in recent_activity %}
+                    <article class="dashboard-empty-state text-start {% if not loop.last %}mb-3 pb-3 border-bottom{% endif %}">
+                        <div class="d-flex justify-content-between gap-3">
+                            <div>
+                                <a class="fw-semibold text-decoration-none" href="{{ url_for('diagnosis.view_diagnosis', diagnosis_id=activity.diagnosis.id) }}">{{ activity.diagnosis.diagnosis_code }}</a>
+                                <p class="mb-1 small">{{ activity.diagnosis.patient.first_name }} {{ activity.diagnosis.patient.last_name }} · {{ activity.diagnosis.diagnosis_date }}</p>
+                                {% if activity.latest_prediction %}
+                                    <p class="mb-0 small text-secondary">{{ activity.latest_prediction.prediction_type|replace('_', ' ')|title }}: {{ activity.latest_prediction.predicted_label }}{% if activity.latest_prediction.confidence_score is not none %} · {{ '%.1f%%'|format(activity.latest_prediction.confidence_score * 100) }}{% endif %}</p>
+                                {% elif activity.diagnosis.predicted_disease %}
+                                    <p class="mb-0 small text-secondary">NLP: {{ activity.diagnosis.predicted_disease }}{% if activity.diagnosis.confidence_score is not none %} · {{ '%.1f%%'|format(activity.diagnosis.confidence_score * 100) }}{% endif %}</p>
+                                {% else %}
+                                    <p class="mb-0 small text-secondary">No AI prediction recorded.</p>
+                                {% endif %}
+                            </div>
+                            <span class="badge badge-soft-primary align-self-start">{{ activity.diagnosis.status or 'Pending' }}</span>
+                        </div>
+                    </article>
+                {% else %}
+                    <div class="dashboard-empty-state">
+                        <span class="dashboard-empty-state__icon"><i class="bi bi-clock-history" aria-hidden="true"></i></span>
+                        <p>No recent diagnosis activity to display yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="ui-card dashboard-actions" aria-labelledby="quick-actions-heading">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Shortcuts</p>
+                    <h2 class="dashboard-section-title" id="quick-actions-heading">Quick Actions</h2>
+                </div>
+            </div>
+            <div class="d-grid gap-3">
+                <a class="btn btn-primary" href="{{ url_for('patients.new_patient') }}"><i class="bi bi-person-plus me-2" aria-hidden="true"></i>Add Patient</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.new_diagnosis') }}"><i class="bi bi-clipboard-plus me-2" aria-hidden="true"></i>New Diagnosis</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('reports.list_reports') }}"><i class="bi bi-file-earmark-plus me-2" aria-hidden="true"></i>Generate Report</a>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

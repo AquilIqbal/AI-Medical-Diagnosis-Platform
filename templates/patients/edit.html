@@ -1,0 +1,82 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Edit Patient | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Patient management</p>
+        <h1 class="dashboard-welcome__title">Edit Patient</h1>
+        <p class="dashboard-welcome__description">Update the patient profile details.</p>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<form class="ui-card" action="{{ url_for('patients.update_patient', patient_id=patient.id) }}" method="post">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label" for="first-name">First Name</label>
+            <input class="form-control" id="first-name" name="first_name" type="text" value="{{ form_data.get('first_name', patient.first_name) }}" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="last-name">Last Name</label>
+            <input class="form-control" id="last-name" name="last_name" type="text" value="{{ form_data.get('last_name', patient.last_name) }}" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="gender">Gender</label>
+            {% set gender = form_data.get('gender', patient.gender or '') %}
+            <select class="form-select" id="gender" name="gender">
+                <option value="" {% if not gender %}selected{% endif %}>Select gender</option>
+                {% for option in ('Female', 'Male', 'Other') %}
+                    <option value="{{ option }}" {% if gender == option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="date-of-birth">Date of Birth</label>
+            <input class="form-control" id="date-of-birth" name="date_of_birth" type="date" value="{{ form_data.get('date_of_birth', patient.date_of_birth.isoformat() if patient.date_of_birth else '') }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="blood-group">Blood Group</label>
+            {% set blood_group = form_data.get('blood_group', patient.blood_group or '') %}
+            <select class="form-select" id="blood-group" name="blood_group">
+                <option value="" {% if not blood_group %}selected{% endif %}>Select blood group</option>
+                {% for option in ('A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-') %}
+                    <option value="{{ option }}" {% if blood_group == option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="phone">Phone</label>
+            <input class="form-control" id="phone" name="phone" type="tel" placeholder="Phone number" value="{{ form_data.get('phone', patient.phone or '') }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" id="email" name="email" type="email" placeholder="Email address" value="{{ form_data.get('email', patient.email or '') }}">
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="address">Address</label>
+            <textarea class="form-control" id="address" name="address" rows="3" placeholder="Address">{{ form_data.get('address', patient.address or '') }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="emergency-contact">Emergency Contact</label>
+            <input class="form-control" id="emergency-contact" name="emergency_contact" type="text" placeholder="Contact name" value="{{ form_data.get('emergency_contact', patient.emergency_contact or '') }}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="emergency-phone">Emergency Phone</label>
+            <input class="form-control" id="emergency-phone" name="emergency_phone" type="tel" placeholder="Emergency phone" value="{{ form_data.get('emergency_phone', patient.emergency_phone or '') }}">
+        </div>
+    </div>
+    <div class="d-flex flex-wrap gap-3 mt-4 pt-4 border-top">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-check2 me-2" aria-hidden="true"></i>Save Patient</button>
+        <a class="btn btn-outline-primary" href="{{ url_for('patients.list_patients') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Reports | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Clinical documentation</p>
+        <h1 class="dashboard-welcome__title">Reports</h1>
+        <p class="dashboard-welcome__description">Review comprehensive AI-assisted diagnosis reports.</p>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<section class="ui-card" aria-labelledby="reports-list-heading">
+    <div class="dashboard-section-header">
+        <div>
+            <h2 class="dashboard-section-title" id="reports-list-heading">Available Reports</h2>
+            <p class="text-secondary mb-0 mt-2 small">Select a diagnosis to view its comprehensive clinical report with AI analysis.</p>
+        </div>
+        <form class="input-group" action="{{ url_for('reports.list_reports') }}" method="get" style="max-width: 320px;">
+            <input class="form-control" type="search" name="search" value="{{ search_query }}" placeholder="Search reports" aria-label="Search reports">
+            <button class="input-group-text" type="submit" aria-label="Submit report search"><i class="bi bi-search" aria-hidden="true"></i></button>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Diagnosis Code</th>
+                    <th>Patient</th>
+                    <th>Diagnosis Date</th>
+                    <th>Chief Complaint</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for diagnosis in diagnoses %}
+                    <tr>
+                        <td><span class="badge badge-soft-primary">{{ diagnosis.diagnosis_code }}</span></td>
+                        <td><strong>{{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}</strong></td>
+                        <td>{{ diagnosis.diagnosis_date }}</td>
+                        <td>{{ diagnosis.chief_complaint or 'Not specified' }}</td>
+                        <td><span class="badge badge-soft-primary">{{ diagnosis.status or 'Pending' }}</span></td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-primary" href="{{ url_for('reports.view_report', diagnosis_id=diagnosis.id) }}"><i class="bi bi-file-earmark-pdf me-1" aria-hidden="true"></i>View Report</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td class="text-center text-secondary py-4" colspan="6">{{ 'No matching reports found.' if search_query else 'No reports are available. Create a diagnosis to generate a report.' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

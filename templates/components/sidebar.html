@@ -1,0 +1,18 @@
+<aside class="offcanvas-lg offcanvas-start dashboard-sidebar" tabindex="-1" id="dashboard-sidebar" aria-labelledby="dashboard-sidebar-label">
+    <div class="offcanvas-header dashboard-sidebar__mobile-header">
+        <span class="dashboard-brand" id="dashboard-sidebar-label"><span class="dashboard-brand__mark" aria-hidden="true">+</span>AI Medical Diagnosis</span>
+        <button class="btn-close" type="button" data-bs-dismiss="offcanvas" data-bs-target="#dashboard-sidebar" aria-label="Close navigation"></button>
+    </div>
+    <div class="offcanvas-body dashboard-sidebar__body">
+        <a class="dashboard-brand d-none d-lg-flex" href="{{ url_for('auth.dashboard') }}"><span class="dashboard-brand__mark" aria-hidden="true">+</span>AI Medical Diagnosis</a>
+        <nav class="dashboard-nav" aria-label="Dashboard navigation">
+            <a class="dashboard-nav__link {% if request.endpoint == 'auth.dashboard' %}active{% endif %}" href="{{ url_for('auth.dashboard') }}"><i class="bi bi-grid-1x2" aria-hidden="true"></i> Dashboard</a>
+            <a class="dashboard-nav__link {% if request.blueprint == 'patients' %}active{% endif %}" href="{{ url_for('patients.list_patients') }}"><i class="bi bi-people" aria-hidden="true"></i> Patients</a>
+            <a class="dashboard-nav__link {% if request.blueprint == 'diagnosis' %}active{% endif %}" href="{{ url_for('diagnosis.list_diagnoses') }}"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i> Diagnosis</a>
+            <a class="dashboard-nav__link {% if request.endpoint == 'auth.ai_models' %}active{% endif %}" href="{{ url_for('auth.ai_models') }}"><i class="bi bi-cpu" aria-hidden="true"></i> AI Models</a>
+            <a class="dashboard-nav__link {% if request.blueprint == 'reports' %}active{% endif %}" href="{{ url_for('reports.list_reports') }}"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i> Reports</a>
+            <a class="dashboard-nav__link {% if request.endpoint == 'auth.settings' %}active{% endif %}" href="{{ url_for('auth.settings') }}"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a>
+        </nav>
+        <div class="dashboard-sidebar__footer"><a class="dashboard-nav__link dashboard-nav__link--logout" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Logout</a></div>
+    </div>
+</aside>

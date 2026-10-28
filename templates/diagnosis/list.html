@@ -1,0 +1,75 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Diagnosis | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Clinical assessments</p>
+        <h1 class="dashboard-welcome__title">Diagnosis</h1>
+        <p class="dashboard-welcome__description">Manage diagnosis records and AI-assisted clinical assessments.</p>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('diagnosis.new_diagnosis') }}">
+        <i class="bi bi-clipboard2-plus me-2" aria-hidden="true"></i>New Diagnosis
+    </a>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<section class="ui-card" aria-labelledby="diagnosis-list-heading">
+    <div class="dashboard-section-header">
+        <div>
+            <h2 class="dashboard-section-title" id="diagnosis-list-heading">Diagnosis Directory</h2>
+            <p class="text-secondary mb-0 mt-2 small">Clinical assessment records stored in the platform.</p>
+        </div>
+        <form class="input-group" action="{{ url_for('diagnosis.list_diagnoses') }}" method="get" style="max-width: 320px;">
+            <input class="form-control" type="search" name="search" value="{{ search_query }}" placeholder="Search diagnoses" aria-label="Search diagnoses">
+            <button class="input-group-text" type="submit" aria-label="Submit diagnosis search"><i class="bi bi-search" aria-hidden="true"></i></button>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Diagnosis Code</th>
+                    <th>Patient</th>
+                    <th>Diagnosis Date</th>
+                    <th>Status</th>
+                    <th>AI Prediction</th>
+                    <th>Confidence</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for diagnosis in diagnoses %}
+                    <tr>
+                        <td><span class="badge badge-soft-primary">{{ diagnosis.diagnosis_code }}</span></td>
+                        <td><strong>{{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}</strong></td>
+                        <td>{{ diagnosis.diagnosis_date }}</td>
+                        <td><span class="badge badge-soft-primary">{{ diagnosis.status or 'Pending' }}</span></td>
+                        <td>{{ diagnosis.predicted_disease or 'Not available' }}</td>
+                        <td>{{ diagnosis.confidence_score if diagnosis.confidence_score is not none else 'Not available' }}</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('diagnosis.view_diagnosis', diagnosis_id=diagnosis.id) }}">View</a>
+                            <a class="btn btn-sm btn-outline-primary" href="{{ url_for('diagnosis.edit_diagnosis', diagnosis_id=diagnosis.id) }}">Edit</a>
+                            <form class="d-inline" action="{{ url_for('diagnosis.delete_diagnosis', diagnosis_id=diagnosis.id) }}" method="post">
+                                <button class="btn btn-sm btn-outline-primary" type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td class="text-center text-secondary py-4" colspan="7">{{ 'No matching diagnoses found.' if search_query else 'No diagnoses have been added yet.' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

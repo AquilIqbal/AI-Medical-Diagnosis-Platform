@@ -1,0 +1,72 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Patient Detail | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Patient management</p>
+        <h1 class="dashboard-welcome__title">Patient Detail</h1>
+        <p class="dashboard-welcome__description">Patient demographic and contact information.</p>
+    </div>
+    <a class="btn btn-outline-primary" href="{{ url_for('patients.list_patients') }}">
+        <i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Back to Patients
+    </a>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="ui-card">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Profile</p>
+                    <h2 class="dashboard-section-title">Patient Information</h2>
+                </div>
+                <span class="badge badge-soft-primary">{{ patient.patient_code }}</span>
+            </div>
+            <dl class="row mb-0">
+                <dt class="col-sm-4 text-secondary">Patient Code</dt>
+                <dd class="col-sm-8">{{ patient.patient_code }}</dd>
+                <dt class="col-sm-4 text-secondary">First Name</dt>
+                <dd class="col-sm-8">{{ patient.first_name }}</dd>
+                <dt class="col-sm-4 text-secondary">Last Name</dt>
+                <dd class="col-sm-8">{{ patient.last_name }}</dd>
+                <dt class="col-sm-4 text-secondary">Full Name</dt>
+                <dd class="col-sm-8">{{ patient.first_name }} {{ patient.last_name }}</dd>
+                <dt class="col-sm-4 text-secondary">Gender</dt>
+                <dd class="col-sm-8">{{ patient.gender or 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Date of Birth</dt>
+                <dd class="col-sm-8">{{ patient.date_of_birth.strftime('%d %b %Y') if patient.date_of_birth else 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Blood Group</dt>
+                <dd class="col-sm-8">{{ patient.blood_group or 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Phone</dt>
+                <dd class="col-sm-8">{{ patient.phone or 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Email</dt>
+                <dd class="col-sm-8">{{ patient.email or 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Address</dt>
+                <dd class="col-sm-8">{{ patient.address or 'Not specified' }}</dd>
+                <dt class="col-sm-4 text-secondary">Created At</dt>
+                <dd class="col-sm-8">{{ patient.created_at.strftime('%d %b %Y, %I:%M %p UTC') }}</dd>
+                <dt class="col-sm-4 text-secondary">Updated At</dt>
+                <dd class="col-sm-8 mb-0">{{ patient.updated_at.strftime('%d %b %Y, %I:%M %p UTC') }}</dd>
+            </dl>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="ui-card">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Emergency</p>
+                    <h2 class="dashboard-section-title">Emergency Contact</h2>
+                </div>
+            </div>
+            <dl class="mb-0">
+                <dt class="text-secondary">Contact Name</dt>
+                <dd>{{ patient.emergency_contact or 'Not specified' }}</dd>
+                <dt class="text-secondary">Phone</dt>
+                <dd class="mb-0">{{ patient.emergency_phone or 'Not specified' }}</dd>
+            </dl>
+        </section>
+    </div>
+</div>
+{% endblock %}

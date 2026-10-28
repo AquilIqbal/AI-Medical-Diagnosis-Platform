@@ -1,0 +1,60 @@
+﻿{% extends 'base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+{% endblock %}
+{% block body %}
+{% include 'components/navbar.html' %}
+<main class="flex-grow-1">
+<section class="home-hero" id="home">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="hero-content">
+                    <span class="home-hero__eyebrow"><i class="bi bi-stars" aria-hidden="true"></i> Intelligent healthcare platform</span>
+                    <h1 class="home-hero__title">Clinical intelligence for clearer decisions.</h1>
+                    <p class="home-hero__subtitle" id="about">AI Medical Diagnosis Platform</p>
+                    <p class="home-hero__description">A secure, explainable foundation for clinical decision support—designed to bring medical data, images, and language into one focused workflow.</p>
+                    <div class="home-hero__actions">
+                        <a class="btn btn-primary" href="#features">Get Started <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+                        <a class="btn btn-outline-primary" href="#features">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="medical-visual" role="img" aria-label="Illustration of an AI medical dashboard with a diagnostic chip, an X-ray preview, and clinical insight cards">
+                    <div class="medical-visual__mesh"></div>
+                    <div class="dashboard-shell">
+                        <div class="dashboard-shell__header"><span></span><span></span><span></span><div></div></div>
+                        <div class="dashboard-shell__body">
+                            <div class="xray-panel"><div class="xray-panel__scan"></div><i class="bi bi-activity" aria-hidden="true"></i><span>X-ray analysis</span></div>
+                            <div class="dashboard-metrics"><div><span>Confidence</span><strong>98.4%</strong></div><div><span>Findings</span><strong>03</strong></div></div>
+                        </div>
+                    </div>
+                    <div class="ai-chip"><i class="bi bi-cpu-fill" aria-hidden="true"></i><span>AI</span></div>
+                    <div class="medical-visual__card medical-visual__card--top"><i class="bi bi-shield-check" aria-hidden="true"></i><div><span class="medical-visual__label">Clinical AI</span><span class="medical-visual__value">Decision support</span></div></div>
+                    <div class="medical-visual__card medical-visual__card--bottom"><i class="bi bi-lightbulb" aria-hidden="true"></i><div><span class="medical-visual__label">Explainability</span><span class="medical-visual__value">Built for clarity</span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="hero-divider" aria-hidden="true"></div>
+<section class="feature-section section-space" id="features">
+    <div class="container">
+        <header class="text-center mb-5">
+            <span class="badge badge-soft-primary">Platform capabilities</span>
+            <h2 class="section-title mt-3">Clinical intelligence, available today</h2>
+            <p class="section-description">Integrated clinical, language, and image AI workflows for focused diagnostic support.</p>
+        </header>
+        <div class="row g-4">
+            {% for title, description, icon in [('Clinical ML', 'Assess detailed clinical inputs with an integrated Random Forest model.', 'bi-cpu'), ('Image Processing', 'Analyze supported medical images with an enhanced pneumonia CNN.', 'bi-image'), ('NLP', 'Classify symptom and clinical narratives into disease predictions.', 'bi-chat-square-text'), ('Explainable AI', 'Review CNN image predictions with Grad-CAM visualizations.', 'bi-lightbulb'), ('Secure Database', 'Persist patients, diagnoses, assessments, and independent AI predictions.', 'bi-database-check'), ('Reports & Analytics', 'Reporting features are planned for a later platform update.', 'bi-bar-chart-line')] %}
+            <div class="col-md-6 col-lg-4"><article class="ui-card ui-card--interactive feature-card"><div class="feature-icon" aria-hidden="true"><i class="bi {{ icon }}"></i></div><h3 class="feature-card__title">{{ title }}</h3><p class="feature-card__description">{{ description }}</p></article></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+</main>
+{% include 'components/footer.html' %}
+{% endblock %}
+

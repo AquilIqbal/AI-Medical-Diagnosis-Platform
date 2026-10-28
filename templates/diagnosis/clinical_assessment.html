@@ -1,0 +1,136 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Advanced Clinical Assessment | AI Medical Diagnosis Platform{% endblock %}
+
+{% macro input_value(name) -%}
+    {{- form_data.get(name, assessment|attr(name) if assessment else '') -}}
+{%- endmacro %}
+
+{% macro number_field(name, label, unit='') -%}
+<div class="col-md-6 col-xl-4">
+    <label class="form-label" for="{{ name }}">{{ label }}{% if unit %} ({{ unit }}){% endif %}</label>
+    <input class="form-control" id="{{ name }}" name="{{ name }}" type="number" step="any" value="{{ input_value(name) }}" required>
+</div>
+{%- endmacro %}
+
+{% macro select_field(name, label, choices) -%}
+{% set selected_value = form_data.get(name, assessment|attr(name) if assessment else '') %}
+<div class="col-md-6 col-xl-4">
+    <label class="form-label" for="{{ name }}">{{ label }}</label>
+    <select class="form-select" id="{{ name }}" name="{{ name }}" required>
+        <option value="">Select {{ label|lower }}</option>
+        {% for choice in choices %}
+            <option value="{{ choice }}" {{ 'selected' if selected_value == choice else '' }}>{{ choice }}</option>
+        {% endfor %}
+    </select>
+</div>
+{%- endmacro %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Optional detailed assessment</p>
+        <h1 class="dashboard-welcome__title">Advanced Clinical Assessment</h1>
+        <p class="dashboard-welcome__description">Provide complete clinical and laboratory information to run the Clinical ML model for {{ diagnosis.patient.first_name }} {{ diagnosis.patient.last_name }}.</p>
+    </div>
+    <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.view_diagnosis', diagnosis_id=diagnosis.id) }}"><i class="bi bi-arrow-left me-2" aria-hidden="true"></i>Back to Diagnosis</a>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endwith %}
+
+<div class="alert alert-info" role="alert">
+    All fields are required for this optional model. Age and gender are obtained from the patient profile; age is calculated on the diagnosis date.
+</div>
+
+<form class="ui-card" action="{{ url_for('diagnosis.save_clinical_assessment', diagnosis_id=diagnosis.id) }}" method="post">
+    <section class="mb-5">
+        <div class="dashboard-section-header mb-3">
+            <div>
+                <p class="dashboard-eyebrow">Measurements</p>
+                <h2 class="dashboard-section-title">Body / Vital Measurements</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {{ number_field('bmi', 'BMI', 'kg/m²') }}
+            {{ number_field('sleep_hours', 'Sleep Hours', 'hours') }}
+            {{ number_field('heart_rate', 'Heart Rate', 'bpm') }}
+        </div>
+    </section>
+
+    <section class="mb-5 pt-4 border-top">
+        <div class="dashboard-section-header mb-3">
+            <div>
+                <p class="dashboard-eyebrow">Blood tests</p>
+                <h2 class="dashboard-section-title">Laboratory Measurements</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {{ number_field('HbA1c_level', 'HbA1c Level') }}
+            {{ number_field('glucose', 'Glucose') }}
+            {{ number_field('cholesterol', 'Cholesterol') }}
+            {{ number_field('triglycerides', 'Triglycerides') }}
+            {{ number_field('crp_level', 'CRP Level') }}
+            {{ number_field('homocysteine_level', 'Homocysteine Level') }}
+            {{ number_field('hdl', 'HDL') }}
+            {{ number_field('ldl', 'LDL') }}
+            {{ select_field('low_hdl_cholesterol', 'Low HDL Cholesterol', ('Yes', 'No')) }}
+            {{ select_field('high_ldl_cholesterol', 'High LDL Cholesterol', ('Yes', 'No')) }}
+        </div>
+    </section>
+
+    <section class="mb-5 pt-4 border-top">
+        <div class="dashboard-section-header mb-3">
+            <div>
+                <p class="dashboard-eyebrow">Blood pressure</p>
+                <h2 class="dashboard-section-title">Cardiovascular Measurements</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {{ number_field('blood_pressure', 'Blood Pressure') }}
+            {{ number_field('systolic_bp', 'Systolic BP', 'mmHg') }}
+            {{ number_field('diastolic_bp', 'Diastolic BP', 'mmHg') }}
+            {{ select_field('high_blood_pressure', 'High Blood Pressure', ('Yes', 'No')) }}
+        </div>
+    </section>
+
+    <section class="mb-5 pt-4 border-top">
+        <div class="dashboard-section-header mb-3">
+            <div>
+                <p class="dashboard-eyebrow">Clinical context</p>
+                <h2 class="dashboard-section-title">Lifestyle / Risk Factors</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {{ select_field('smoking', 'Smoking', ('Current', 'Former', 'Never')) }}
+            {{ select_field('physical_activity', 'Physical Activity', ('High', 'Moderate', 'Low')) }}
+            {{ select_field('family_history', 'Family History', ('Yes', 'No')) }}
+            {{ select_field('stress_level', 'Stress Level', ('High', 'Medium', 'Low')) }}
+            {{ select_field('sugar_consumption', 'Sugar Consumption', ('High', 'Medium', 'Low')) }}
+            {{ number_field('alcohol_intake', 'Alcohol Intake') }}
+            {{ number_field('salt_intake', 'Salt Intake') }}
+        </div>
+    </section>
+
+    <section class="pt-4 border-top">
+        <div class="dashboard-section-header mb-3">
+            <div>
+                <p class="dashboard-eyebrow">Patient context</p>
+                <h2 class="dashboard-section-title">Social / Demographic Context</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {{ select_field('education_level', 'Education Level', ('Primary', 'Secondary', 'Tertiary')) }}
+            {{ select_field('employment_status', 'Employment Status', ('Employed', 'Retired', 'Unemployed')) }}
+        </div>
+    </section>
+
+    <div class="d-flex flex-wrap gap-3 mt-4 pt-4 border-top">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-cpu me-2" aria-hidden="true"></i>{{ 'Update and Run Clinical ML' if assessment else 'Save and Run Clinical ML' }}</button>
+        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.view_diagnosis', diagnosis_id=diagnosis.id) }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

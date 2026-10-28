@@ -1,0 +1,28 @@
+﻿{% extends 'base.html' %}
+
+{% block title %}Login | AI Medical Diagnosis Platform{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+{% endblock %}
+{% block body %}
+{% include 'components/navbar.html' %}
+<main class="flex-grow-1 d-flex flex-column">
+<section class="auth-page d-flex align-items-center py-5">
+    <div class="container"><div class="row justify-content-center"><div class="col-sm-10 col-md-8 col-lg-6 col-xl-5"><div class="auth-card ui-card">
+        <a class="auth-brand" href="{{ url_for('main.home') }}" aria-label="Return to platform home"><span class="navbar-brand__mark" aria-hidden="true">+</span><span>AI Medical Diagnosis</span></a>
+        <header class="auth-card__header"><h1 class="auth-card__title">Welcome Back</h1><p class="auth-card__description">Sign in to continue to your clinical workspace.</p></header>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="auth-flash-messages" aria-live="polite">{% for category, message in messages %}{% set alert_type = 'success' if category == 'success' else 'danger' if category in ['error', 'danger'] else 'info' %}<div class="alert alert-{{ alert_type }}" role="alert">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+        <form action="{{ url_for('auth.login') }}" method="post" class="needs-validation" data-validate-form novalidate>
+            <div class="mb-3"><label class="form-label" for="identifier">Username or Email</label><div class="input-group"><span class="input-group-text" aria-hidden="true"><i class="bi bi-person"></i></span><input class="form-control" id="identifier" name="identifier" type="text" autocomplete="username" placeholder="Enter your username or email" required><div class="invalid-feedback">Enter your username or email.</div></div></div>
+            <div class="mb-3"><div class="d-flex justify-content-between align-items-center gap-3"><label class="form-label mb-1" for="password">Password</label><a class="auth-muted-link disabled" href="#" aria-disabled="true" tabindex="-1">Forgot Password?</a></div><div class="input-group"><span class="input-group-text" aria-hidden="true"><i class="bi bi-lock"></i></span><input class="form-control" id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required><button class="btn auth-password-toggle" type="button" data-password-toggle data-password-target="password" aria-label="Show password" aria-pressed="false"><i class="bi bi-eye" aria-hidden="true"></i></button><div class="invalid-feedback">Enter your password.</div></div></div>
+            <div class="form-check mb-4"><input class="form-check-input" id="remember-me" name="remember_me" type="checkbox"><label class="form-check-label" for="remember-me">Remember Me</label></div>
+            <button class="btn btn-primary w-100" type="submit">Login <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></button>
+        </form>
+        <a class="auth-home-link" href="{{ url_for('main.home') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Home</a>
+    </div></div></div></div>
+</section>
+</main>
+{% include 'components/footer.html' %}
+{% endblock %}
+

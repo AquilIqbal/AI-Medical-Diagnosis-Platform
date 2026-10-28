@@ -1,0 +1,73 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}New Diagnosis | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Clinical assessments</p>
+        <h1 class="dashboard-welcome__title">New Diagnosis</h1>
+        <p class="dashboard-welcome__description">Record a new clinical assessment and prepare it for future AI analysis.</p>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endwith %}
+
+<form class="ui-card" action="{{ url_for('diagnosis.create_diagnosis') }}" method="post" enctype="multipart/form-data">
+    <div class="row g-4">
+        <div class="col-md-6">
+            <label class="form-label" for="patient">Patient</label>
+            <select class="form-select" id="patient" name="patient_id">
+                <option value="" {{ 'selected' if not form_data.get('patient_id') else '' }}>Select patient</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}" {{ 'selected' if form_data.get('patient_id')|string == patient.id|string else '' }}>
+                        {{ patient.first_name }} {{ patient.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="diagnosis-date">Diagnosis Date</label>
+            <input class="form-control" id="diagnosis-date" name="diagnosis_date" type="date" value="{{ form_data.get('diagnosis_date', '') }}">
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="chief-complaint">Chief Complaint</label>
+            <textarea class="form-control" id="chief-complaint" name="chief_complaint" rows="3" placeholder="Describe the patient's chief complaint">{{ form_data.get('chief_complaint', '') }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="symptoms">Symptoms</label>
+            <textarea class="form-control" id="symptoms" name="symptoms" rows="4" placeholder="Record observed and reported symptoms">{{ form_data.get('symptoms', '') }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="medical-history">Medical History</label>
+            <textarea class="form-control" id="medical-history" name="medical_history" rows="4" placeholder="Record relevant medical history">{{ form_data.get('medical_history', '') }}</textarea>
+        </div>
+        <div class="col-12">
+            <label class="form-label" for="doctor-notes">Doctor Notes</label>
+            <textarea class="form-control" id="doctor-notes" name="doctor_notes" rows="4" placeholder="Add clinical notes and observations">{{ form_data.get('doctor_notes', '') }}</textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="medical-image">Medical Image Upload</label>
+            <input class="form-control" id="medical-image" name="medical_image" type="file" accept="image/*">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="status">Status</label>
+            <select class="form-select" id="status" name="status">
+                <option value="Pending" {{ 'selected' if form_data.get('status', 'Pending') == 'Pending' else '' }}>Pending</option>
+                <option value="In Review" {{ 'selected' if form_data.get('status') == 'In Review' else '' }}>In Review</option>
+                <option value="Completed" {{ 'selected' if form_data.get('status') == 'Completed' else '' }}>Completed</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex flex-wrap gap-3 mt-4 pt-4 border-top">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-check2 me-2" aria-hidden="true"></i>Save Diagnosis</button>
+        <a class="btn btn-outline-primary" href="{{ url_for('diagnosis.list_diagnoses') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

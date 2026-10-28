@@ -1,0 +1,29 @@
+# Secrets and local environment configuration
+.env
+.env.*
+!.env.example
+
+# Python environments and generated files
+.venv/
+venv/
+env/
+aipp/
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Test and tool caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local application state and generated or uploaded data
+instance/
+logs/
+uploads/
+
+# Generated clinical ML model
+/models/ml/clinical_disease_random_forest.joblib
+
+# Internal project audit
+/AUDIT_AI_ML_ARCHITECTURE.md

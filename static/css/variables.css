@@ -1,0 +1,90 @@
+﻿/* Global design tokens. Every application page inherits these values. */
+:root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --topbar-bg: rgb(255 255 255 / 88%);
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-inverse: #f8fafc;
+    --border-color: #e2e8f0;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-soft: #eff6ff;
+    --primary-border: #bfdbfe;
+    --primary-pale: #dbeafe;
+    --primary-shadow: rgb(37 99 235 / 20%);
+    --primary-shadow-hover: rgb(37 99 235 / 28%);
+    --focus-shadow: rgb(37 99 235 / 12%);
+    --focus-ring: rgb(37 99 235 / 32%);
+    --card-overlay: rgb(255 255 255 / 92%);
+    --accent: #10b981;
+    --accent-text: #047857;
+    --accent-soft: #ecfdf5;
+    --neutral-soft: #f1f5f9;
+    --neutral-text: #475569;
+    --sidebar-text: #0f172a;
+    --sidebar-text-muted: #475569;
+    --sidebar-hover-bg: #eff6ff;
+    --sidebar-active-bg: #2563eb;
+    --sidebar-active-shadow: 0 8px 18px rgb(37 99 235 / 28%);
+    --danger-soft: rgb(239 68 68 / 12%);
+    --danger-text: #991b1b;
+    --shadow: 0 10px 30px rgb(15 23 42 / 7%);
+    --shadow-hover: 0 18px 40px rgb(15 23 42 / 12%);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --font-sans: "Inter", sans-serif;
+    --theme-transition: background-color .24s ease, color .24s ease, border-color .24s ease, box-shadow .24s ease;
+
+    /* Compatibility aliases for shared existing components. */
+    --color-primary: var(--primary);
+    --color-primary-dark: var(--primary-hover);
+    --color-secondary: var(--text-primary);
+    --color-accent: var(--accent);
+    --color-background: var(--bg-primary);
+    --color-surface: var(--card-bg);
+    --color-text: var(--text-primary);
+    --color-muted: var(--text-secondary);
+    --color-border: var(--border-color);
+    --color-primary-soft: var(--primary-soft);
+    --shadow-card: var(--shadow);
+}
+
+:root[data-theme="dark"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: #111827;
+    --card-bg: #1e293b;
+    --sidebar-bg: #111827;
+    --topbar-bg: rgb(30 41 59 / 90%);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-inverse: #f8fafc;
+    --border-color: #334155;
+    --primary: #2563eb;
+    --primary-hover: #3b82f6;
+    --primary-soft: rgb(37 99 235 / 18%);
+    --primary-border: rgb(59 130 246 / 54%);
+    --primary-pale: rgb(37 99 235 / 24%);
+    --primary-shadow: rgb(37 99 235 / 24%);
+    --primary-shadow-hover: rgb(59 130 246 / 30%);
+    --focus-shadow: rgb(59 130 246 / 18%);
+    --focus-ring: rgb(59 130 246 / 42%);
+    --card-overlay: rgb(30 41 59 / 92%);
+    --accent: #10b981;
+    --accent-text: #6ee7b7;
+    --accent-soft: rgb(16 185 129 / 16%);
+    --neutral-soft: #273449;
+    --neutral-text: #cbd5e1;
+    --sidebar-text: #f8fafc;
+    --sidebar-text-muted: #cbd5e1;
+    --sidebar-hover-bg: rgb(255 255 255 / 9%);
+    --sidebar-active-bg: #2563eb;
+    --sidebar-active-shadow: 0 8px 18px rgb(37 99 235 / 32%);
+    --danger-soft: rgb(248 113 113 / 14%);
+    --danger-text: #fecaca;
+    --shadow: 0 10px 30px rgb(0 0 0 / 22%);
+    --shadow-hover: 0 18px 40px rgb(0 0 0 / 32%);
+}

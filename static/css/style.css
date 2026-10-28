@@ -1,0 +1,9 @@
+/* Global visual language for the public application shell. */
+:root { --app-navy: #102a43; --app-blue: #0b6e99; --app-surface: #f6f9fc; --app-text: #1f2937; }
+body { color: var(--app-text); background: var(--app-surface); }
+.app-navbar { background: linear-gradient(115deg, var(--app-navy), var(--app-blue)); box-shadow: 0 2px 12px rgb(16 42 67 / 18%); }
+.hero-section { min-height: calc(100vh - 126px); background: radial-gradient(circle at top, #e6f5fb 0%, var(--app-surface) 50%); }
+.hero-eyebrow { color: var(--app-blue); font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.technology-panel { max-width: 720px; padding: 2rem; background: #fff; border: 1px solid #d9e2ec; border-radius: 1rem; box-shadow: 0 16px 40px rgb(16 42 67 / 8%); }
+.technology-item { height: 100%; padding: .85rem; color: var(--app-navy); font-weight: 600; text-align: center; background: #edf7fb; border-radius: .5rem; }
+.app-footer { color: #bcccdc; background: var(--app-navy); }

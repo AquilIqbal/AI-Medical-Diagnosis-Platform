@@ -1,0 +1,31 @@
+﻿<nav class="navbar navbar-expand-lg app-navbar sticky-top" aria-label="Primary navigation">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('main.home') }}" aria-label="AI Medical Diagnosis Platform home">
+            <span class="navbar-brand__mark" aria-hidden="true">+</span>AI Medical Diagnosis
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation" aria-controls="main-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navigation">
+            <ul class="navbar-nav mx-auto gap-lg-2">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}#features">Features</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}#contact">Contact</a></li>
+            </ul>
+            <div class="app-navbar__actions">
+                <div class="dropdown">
+                    <button class="btn app-theme-toggle" type="button" id="global-theme-menu-button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Change color theme">
+                        <i class="bi bi-circle-half" data-theme-icon aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end app-theme-menu" aria-labelledby="global-theme-menu-button">
+                        <li><button class="dropdown-item" type="button" data-theme-option="light"><i class="bi bi-sun" aria-hidden="true"></i> Light <i class="bi bi-check2 d-none" data-theme-check="light" aria-hidden="true"></i></button></li>
+                        <li><button class="dropdown-item" type="button" data-theme-option="dark"><i class="bi bi-moon-stars" aria-hidden="true"></i> Dark <i class="bi bi-check2 d-none" data-theme-check="dark" aria-hidden="true"></i></button></li>
+                        <li><button class="dropdown-item" type="button" data-theme-option="system"><i class="bi bi-pc-display" aria-hidden="true"></i> System <i class="bi bi-check2 d-none" data-theme-check="system" aria-hidden="true"></i></button></li>
+                    </ul>
+                </div>
+                <a class="btn btn-primary btn-sm nav-login-button" href="{{ url_for('auth.login') }}">Login</a>
+            </div>
+        </div>
+    </div>
+</nav>

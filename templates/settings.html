@@ -1,0 +1,104 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Settings | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Account preferences</p>
+        <h1 class="dashboard-welcome__title">Settings</h1>
+        <p class="dashboard-welcome__description">Manage your account details and sign-in security.</p>
+    </div>
+</section>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category in ['error', 'danger'] else 'info' }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="ui-card">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Profile</p>
+                    <h2 class="dashboard-section-title">Account Information</h2>
+                </div>
+            </div>
+            <form action="{{ url_for('auth.update_settings_profile') }}" method="post" class="needs-validation" data-validate-form novalidate>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label" for="full_name">Full Name</label>
+                        <input class="form-control" id="full_name" name="full_name" type="text" maxlength="150" value="{{ form_data.get('full_name', user.full_name) }}" required>
+                        <div class="invalid-feedback">Enter your full name.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="username">Username</label>
+                        <input class="form-control" id="username" type="text" value="{{ user.username }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" id="email" name="email" type="email" maxlength="255" value="{{ form_data.get('email', user.email) }}" required>
+                        <div class="invalid-feedback">Enter a valid email address.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="phone_number">Phone Number</label>
+                        <input class="form-control" id="phone_number" name="phone_number" type="tel" maxlength="32" value="{{ form_data.get('phone_number', user.phone_number or '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="role">Role</label>
+                        <input class="form-control" id="role" type="text" value="{{ user.role.value if user.role is not string else user.role }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="account_status">Account Status</label>
+                        <input class="form-control" id="account_status" type="text" value="{{ 'Active' if user.is_active else 'Inactive' }}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="last_login">Last Login</label>
+                        <input class="form-control" id="last_login" type="text" value="{% if user.last_login %}{{ user.last_login.strftime('%d %b %Y, %I:%M %p UTC') if user.last_login is not string else user.last_login }}{% else %}Never{% endif %}" readonly>
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-4" type="submit"><i class="bi bi-check2-circle me-2" aria-hidden="true"></i>Save Account Information</button>
+            </form>
+        </section>
+    </div>
+
+    <div class="col-lg-5">
+        <section class="ui-card">
+            <div class="dashboard-section-header">
+                <div>
+                    <p class="dashboard-eyebrow">Security</p>
+                    <h2 class="dashboard-section-title">Change Password</h2>
+                </div>
+            </div>
+            <form action="{{ url_for('auth.change_settings_password') }}" method="post" class="needs-validation" data-validate-form novalidate>
+                <div class="mb-3">
+                    <label class="form-label" for="current_password">Current Password</label>
+                    <input class="form-control" id="current_password" name="current_password" type="password" autocomplete="current-password" required>
+                    <div class="invalid-feedback">Enter your current password.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="new_password">New Password</label>
+                    <input class="form-control" id="new_password" name="new_password" type="password" autocomplete="new-password" required>
+                    <div class="invalid-feedback">Enter a new password.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="confirm_password">Confirm New Password</label>
+                    <input class="form-control" id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required>
+                    <div class="invalid-feedback">Confirm your new password.</div>
+                </div>
+                <button class="btn btn-outline-primary" type="submit"><i class="bi bi-shield-lock me-2" aria-hidden="true"></i>Change Password</button>
+            </form>
+        </section>
+
+        <section class="ui-card mt-4">
+            <p class="dashboard-eyebrow">Appearance</p>
+            <h2 class="dashboard-section-title mb-2">Theme Preference</h2>
+            <p class="text-secondary mb-0 small">Use the theme selector in the topbar to choose Light, Dark, or System appearance. Your preference is saved in this browser.</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}AI Models | AI Medical Diagnosis Platform{% endblock %}
+
+{% block dashboard_content %}
+<section class="dashboard-welcome">
+    <div>
+        <p class="dashboard-eyebrow">Deployed capabilities</p>
+        <h1 class="dashboard-welcome__title">AI Models</h1>
+        <p class="dashboard-welcome__description">Read-only information about the model artifacts currently integrated with this platform.</p>
+    </div>
+</section>
+
+<div class="row g-4">
+    {% for model in models %}
+        <div class="col-lg-4">
+            <section class="ui-card h-100">
+                <div class="dashboard-section-header mb-4">
+                    <div>
+                        <p class="dashboard-eyebrow">{{ model.title }}</p>
+                        <h2 class="dashboard-section-title">{{ model.model_name }}</h2>
+                    </div>
+                    <span class="badge {{ 'badge-soft-primary' if model.is_available else 'text-bg-danger' }}">{{ 'Available' if model.is_available else 'Unavailable' }}</span>
+                </div>
+                <dl class="mb-0">
+                    <dt class="text-secondary">Input</dt>
+                    <dd>{{ model.input_description }}</dd>
+                    <dt class="text-secondary">Output</dt>
+                    <dd>{{ model.output_description }}</dd>
+                    <dt class="text-secondary">Artifact{{ 's' if model.artifacts|length > 1 else '' }}</dt>
+                    <dd>
+                        {% for artifact in model.artifacts %}
+                            <code class="d-block text-break {% if not loop.last %}mb-1{% endif %}">{{ artifact }}</code>
+                        {% endfor %}
+                    </dd>
+                    {% for label, value in model.details %}
+                        <dt class="text-secondary">{{ label }}</dt>
+                        <dd>{{ value }}</dd>
+                    {% endfor %}
+                </dl>
+            </section>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
